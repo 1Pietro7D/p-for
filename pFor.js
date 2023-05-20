@@ -1,6 +1,3 @@
-const links = ["hello", "meow"];
-const numbers = [1, 2, 3, 4, 5];
-
 // Get all elements with the "p-for" attribute
 const elements = document.querySelectorAll("[p-for]");
 elements.forEach((element, iterator, array) => {
