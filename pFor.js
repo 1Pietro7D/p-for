@@ -90,7 +90,7 @@ elements.forEach((element, iterator, array) => {
                     console.log(myAttr);
                     if (myAttr != "") {
                         try {
-                            console.log(eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof (eval(`dataLocal[${i}]${myAttr}`)) == typeof (Object) ? "not undefined and object" : "not undefined but not object" : "undefined and error");
+                            console.log(eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof (eval(`dataLocal[${i}]${myAttr}`)) === "object" ? "not undefined and object" : "not undefined but not object" : "undefined and error");
                             return eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof eval(`dataLocal[${i}]${myAttr}`) === "object" ? JSON.stringify(eval(`dataLocal[${i}]${myAttr}`)) : eval(`dataLocal[${i}]${myAttr}`) : error
                         } catch (error) {
                             throw new Error('Undefined value: ' + myAttr);
