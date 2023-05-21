@@ -97,7 +97,7 @@ elements.forEach((element, iterator, array) => {
                         }
                     }
                     else
-                        return typeof eval(`dataLocal[${i}]${myAttr}`) === "object" ? JSON.stringify(eval(`dataLocal[${i}]`)) : eval(`dataLocal[${i}]`);
+                        return typeof eval(`dataLocal[${i}]`) === "object" ? JSON.stringify(eval(`dataLocal[${i}]`)) : eval(`dataLocal[${i}]`);
                     //  return JSON.stringify(eval(`dataLocal[${i}]`)); // you don't need to check if it's an object for JSON.stringify but the output will be enclosed in "quotes" if a string
 
 
