@@ -1,9 +1,9 @@
 const elements = document.querySelectorAll("[p-for]");
-elements.forEach((element, iterator, array) => {
-    let dataLocal = null;
-    let itemToInterpolate = null;
-    let localCollection = null;
-    const regex = /{{(.*?)}}+/g;
+elements.forEach((element, iterator, array) => { // per ogni elemento p-for
+    let dataLocal = null; // qui finiscono tutti gli elementi interpolati {{  }}
+    let itemToInterpolate = null; // nome che verrà ricercato nel valore, corrispondente a "item" su "item of items"
+    let localCollection = null;  // nome corrispondente a "items" e Deve corrispondere a una variabile già valida
+    const regex = /{{(.*?)}}+/g; // controllo regex 
     const stringAttributeValue = element.getAttribute("p-for");
 
     // Check if the "p-for" attribute contains " of "
@@ -66,8 +66,15 @@ elements.forEach((element, iterator, array) => {
         dataLocal.forEach((item, i) => {
             const myAttributes = content
                 .match(regex)
-                .filter(value => value.includes(itemToInterpolate))
-                .filter(value => value.slice(2, -2).trim().split(".")[0] == itemToInterpolate)
+                .filter(value => {
+                    if (!value.includes(itemToInterpolate)) {
+                        return false
+                    }
+                    if (!value.slice(2, -2).trim().split(".")[0] == itemToInterpolate) {
+                        return false
+                    }
+                    return true;
+                })
                 .map(value => {
                     const processedValue = value.slice(2, -2).trim().replace(itemToInterpolate, "");
                     if (processedValue != "") {
@@ -90,6 +97,7 @@ elements.forEach((element, iterator, array) => {
                     console.log(myAttr);
                     if (myAttr != "") {
                         try {
+
                             console.log(eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof (eval(`dataLocal[${i}]${myAttr}`)) === "object" ? "not undefined and object" : "not undefined but not object" : "undefined and error");
                             return eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof eval(`dataLocal[${i}]${myAttr}`) === "object" ? JSON.stringify(eval(`dataLocal[${i}]${myAttr}`)) : eval(`dataLocal[${i}]${myAttr}`) : error
                         } catch (error) {
@@ -121,5 +129,6 @@ elements.forEach((element, iterator, array) => {
 // Check if a string is a valid variable name
 function isValidVariableName(input) {
     var regex = /^[a-zA-Z_$][a-zA-Z0-9_$.]*$/; // Starts with a letter, $, or _
+
     return regex.test(input);
 }
