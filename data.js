@@ -84,3 +84,29 @@ const data2 = [
 
     }
 ]
+
+const datamap =
+    [
+        {
+            child: [
+                {
+                    child: [{
+                        child: []
+                    }, {
+                        child: []
+                    }]
+                }
+            ]
+        },
+        {
+            child: [
+                {
+                    child: [{
+                        child: []
+                    }, {
+                        child: []
+                    }]
+                }
+            ]
+        }
+    ]
