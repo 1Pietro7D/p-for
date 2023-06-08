@@ -1,5 +1,143 @@
+
+// const mapping = []
+// const mappingLevel = 0;
+
+// const elementsdata = document.querySelectorAll("div[p]");
+
+// // mapping child
+// const mappingCheck = Array.from(elementsdata).map((element) => {
+//     const childDivCount = element.querySelectorAll("div[p]").length;
+//     return childDivCount;
+// });
+
+// console.log(mappingCheck);
+
+// elementsdata.forEach((element, i, array) => {
+//     // console.log(element);
+//     // console.log(mappingCheck[i]);
+//     mapping.push(
+//         {
+//             lv:mappingLevel,
+//             element:array.splice(0, 1),
+//             child:[]
+//         }
+//     );
+//     if (mappingCheck[i] > 0) {
+//         mappingLevel ++;
+//         const childs = array.splice(0, mappingCheck[i])
+//         mappingCheck.shift();
+//         childs.forEach((child, y, childs)=>{
+//             mapping[i].child.push(
+//                 {
+//                     lv:mappingLevel,
+//                     element:childs.splice(0, 1),
+//                     child:[]
+//                 }
+//             );
+
+//             if (mappingCheck[i] > 0){
+//                 subChild = childs.splice(0 , mappingCheck[i])
+//                 mappingLevel ++;
+//             } else {
+//                 mappingCheck --;
+//             }
+//         })
+//     }
+// })
+function parseHTMLHierarchy(html) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const rootElement = doc.body.firstChild;
+
+    function traverse(element) {
+        const level = parseInt(element.getAttribute("livello")) || 0;
+        const childElements = Array.from(element.children);
+
+        const parsedElement = {
+            level: level,
+            element: element.outerHTML,
+            child: []
+        };
+
+        if (childElements.length > 0) {
+            childElements.forEach(child => {
+                const parsedChild = traverse(child);
+                parsedElement.child.push(parsedChild);
+            });
+        }
+
+        return parsedElement;
+    }
+
+    return traverse(rootElement);
+}
+
+// Esempio di utilizzo
+const html = `
+    <div p livello="0" count="3">
+      <div p livello="1" count="1">
+        <div p livello="2" count="0"></div>
+      </div>
+      <div p livello="1" count="0"></div>
+    </div>
+    <div p livello="0" count="2">
+      <div p livello="1" count="1">
+        <div p livello="2" count="0"></div>
+      </div>
+    </div>
+    <div p livello="0" count="0"></div>
+  `;
+
+const parsedHierarchy = parseHTMLHierarchy(html);
+console.log(parsedHierarchy);
+
+
+
+// if (mappingLevel == 0) {
+//     mapping.push({
+//         lv:mappingLevel,
+//         element:element, 
+//         child:[]
+//     })
+// }else if (mappingLevel > 0) {
+
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const elements = document.querySelectorAll("[p-for]");
 elements.forEach((element, iterator, array) => { // per ogni elemento p-for
+    printP_for(element, iterator, array);
+});
+
+// Check if a string is a valid variable name
+function isValidVariableName(input) {
+    var regex = /^[a-zA-Z_$][a-zA-Z0-9_$.]*$/; // Starts with a letter, $, or _
+
+    return regex.test(input);
+}
+
+function printP_for(element, iterator, array) {
     let dataLocal = null; // qui finiscono tutti gli elementi interpolati {{  }}
     let itemToInterpolate = null; // nome che verrà ricercato nel valore, corrispondente a "item" su "item of items"
     let localCollection = null;  // nome corrispondente a "items" e Deve corrispondere a una variabile già valida
@@ -123,12 +261,4 @@ elements.forEach((element, iterator, array) => { // per ogni elemento p-for
         console.error(error);
     }
 
-
-});
-
-// Check if a string is a valid variable name
-function isValidVariableName(input) {
-    var regex = /^[a-zA-Z_$][a-zA-Z0-9_$.]*$/; // Starts with a letter, $, or _
-
-    return regex.test(input);
 }
