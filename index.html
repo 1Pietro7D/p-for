@@ -7,39 +7,80 @@
     <title>Document</title>
     <!-- <script src="https://cdn.jsdelivr.net/gh/1Pietro7D/p-for@main/pFor.js" defer></script> -->
     <script src="data.js"></script>
+    
     <script src="pFor.js" defer></script>
+    <script src="map.js" defer></script>
 </head>
 <body>
     <!-- <div p-for="obx of data">
-       {{ obx }} <br>
-       <div p-for="oby of data2">
-        {{ oby }}
-       </div>
+      <p> {{ obx.a }} </p><br>
+       <div p-for="oz of ciao.a">
+        {{ oz }} <br>
     </div>
-    <div p-for="ob of data2">
+     </div>
+     
+    <div p-for="ob of data3.a">
        {{ ob }} <br>
+       <div p-for="o of ob">
+        {{ o }} <br>
+     </div>
     </div> -->
-
-    <div p LIVELLO 0 count="3"> 
-        <div p LIVELLO 1 count="1">
-            <div p LIVELLO 2 count="0">
-
+    <div p-for="item of data" livello="0" count="5"> 
+        <h1>{{ item }}</h1>
+        <div p-for="item of data" livello="1" count="3">
+            <h2> {{ item }} di A </h2>    
+        </div>     
+    </div>
+       
+    
+    <div p-for="item of data2" livello="0" count="2">
+        <div p-for="subitem of item" livello="1" count="1">
+            <h2> of {{ item.title }} : </h2>
+            <p> {{ subitem }} </p>
+            <div p-for="el of subitem" livello="2" count="0">
+                {{ el }}
             </div>
         </div>
-        <div p LIVELLO 1 count="0">
-
-        </div>
     </div>
-    <div p LIVELLO 0 count="2">
-        <div p LIVELLO 1 count="1">
-            <div p LIVELLO 2 count="0">
-
-            </div>
-        </div>
+    <div p-for="item of data3.a" livello="0" count="0">
+        <p>{{ item }}</p>
     </div>
-    <div p LIVELLO 0 count="0">
-
+    <div c-for="item of data3.a" livello="0" count="0">
+        <p>{{ fake }}</p>
     </div>
-    [3,1,0,0,2,1,0,0]
 </body>
 </html> 
+
+<!-- <div p-for="item of data" livello="0" count="5"> 
+    <h1>{{ item.title }}</h1>
+    <div p-for="subitem of item.a" livello="1" count="3">
+        <h2> {{ subitem }} di A </h2> 
+        <div p-for="el of subitem"  livello="2" count="1">
+            <h3> {{ el }} di subA el </h3> 
+            <div p-for="elem of dataX"  livello="3" count="0">
+                <h3> {{ elem }} di dataX </h3> 
+            </div>
+        </div>
+        <div p-for="elem of dataX"  livello="2" count="0">
+            <h3> {{ elem }} di dataX </h3> 
+        </div>
+    </div>
+    <div p-for="subitem of item.b" livello="1" count="0">
+        <h2> {{ subitem }} di B </h2> 
+    </div>
+</div>
+<div p-for="item of data2" livello="0" count="2">
+    <div p-for="subitem of item" livello="1" count="1">
+        <h2> of {{ item.title }} : </h2>
+        <p> {{ subitem }} </p>
+        <div p-for="el of subitem" livello="2" count="0">
+            {{ el }}
+        </div>
+    </div>
+</div>
+<div p-for="item of data3.a" livello="0" count="0">
+    <p>{{ item }}</p>
+</div>
+<div c-for="item of data3.a" livello="0" count="0">
+    <p>{{ fake }}</p>
+</div> -->

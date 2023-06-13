@@ -1,129 +1,4 @@
 
-// const mapping = []
-// const mappingLevel = 0;
-
-// const elementsdata = document.querySelectorAll("div[p]");
-
-// // mapping child
-// const mappingCheck = Array.from(elementsdata).map((element) => {
-//     const childDivCount = element.querySelectorAll("div[p]").length;
-//     return childDivCount;
-// });
-
-// console.log(mappingCheck);
-
-// elementsdata.forEach((element, i, array) => {
-//     // console.log(element);
-//     // console.log(mappingCheck[i]);
-//     mapping.push(
-//         {
-//             lv:mappingLevel,
-//             element:array.splice(0, 1),
-//             child:[]
-//         }
-//     );
-//     if (mappingCheck[i] > 0) {
-//         mappingLevel ++;
-//         const childs = array.splice(0, mappingCheck[i])
-//         mappingCheck.shift();
-//         childs.forEach((child, y, childs)=>{
-//             mapping[i].child.push(
-//                 {
-//                     lv:mappingLevel,
-//                     element:childs.splice(0, 1),
-//                     child:[]
-//                 }
-//             );
-
-//             if (mappingCheck[i] > 0){
-//                 subChild = childs.splice(0 , mappingCheck[i])
-//                 mappingLevel ++;
-//             } else {
-//                 mappingCheck --;
-//             }
-//         })
-//     }
-// })
-function parseHTMLHierarchy(html) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const rootElement = doc.body.firstChild;
-
-    function traverse(element) {
-        const level = parseInt(element.getAttribute("livello")) || 0;
-        const childElements = Array.from(element.children);
-
-        const parsedElement = {
-            level: level,
-            element: element.outerHTML,
-            child: []
-        };
-
-        if (childElements.length > 0) {
-            childElements.forEach(child => {
-                const parsedChild = traverse(child);
-                parsedElement.child.push(parsedChild);
-            });
-        }
-
-        return parsedElement;
-    }
-
-    return traverse(rootElement);
-}
-
-// Esempio di utilizzo
-const html = `
-    <div p livello="0" count="3">
-      <div p livello="1" count="1">
-        <div p livello="2" count="0"></div>
-      </div>
-      <div p livello="1" count="0"></div>
-    </div>
-    <div p livello="0" count="2">
-      <div p livello="1" count="1">
-        <div p livello="2" count="0"></div>
-      </div>
-    </div>
-    <div p livello="0" count="0"></div>
-  `;
-
-const parsedHierarchy = parseHTMLHierarchy(html);
-console.log(parsedHierarchy);
-
-
-
-// if (mappingLevel == 0) {
-//     mapping.push({
-//         lv:mappingLevel,
-//         element:element, 
-//         child:[]
-//     })
-// }else if (mappingLevel > 0) {
-
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 const elements = document.querySelectorAll("[p-for]");
 elements.forEach((element, iterator, array) => { // per ogni elemento p-for
@@ -141,7 +16,7 @@ function printP_for(element, iterator, array) {
     let dataLocal = null; // qui finiscono tutti gli elementi interpolati {{  }}
     let itemToInterpolate = null; // nome che verrà ricercato nel valore, corrispondente a "item" su "item of items"
     let localCollection = null;  // nome corrispondente a "items" e Deve corrispondere a una variabile già valida
-    const regex = /{{(.*?)}}+/g; // controllo regex 
+    const regex = /{{(.*?)}}/g; // controllo regex 
     const stringAttributeValue = element.getAttribute("p-for");
 
     // Check if the "p-for" attribute contains " of "
@@ -160,6 +35,8 @@ function printP_for(element, iterator, array) {
         }
 
         itemToInterpolate = datasAttribute[0].trim();
+
+
         if (itemToInterpolate == "") {
             throw new Error(`Error: you can't leave empty the name of the value to iterate`);
         }
@@ -181,7 +58,7 @@ function printP_for(element, iterator, array) {
                     throw new Error(`Error: Variable ${localCollection.split(".")[0]} does not contain such attribute, please implement the sub-attributes cyclically.`);
                 }
             } catch (error) {
-                throw new Error("Error: The attribute value does not match any variable.");
+                throw new Error(`Error: The attribute ${localCollection} value does not match any variable.`);
             }
         } else {
             throw new Error("Error: The attribute value contains disallowed characters for security reasons.");
@@ -191,17 +68,26 @@ function printP_for(element, iterator, array) {
 
         // Ensure that the value of the attribute corresponds to an array variable
         if (!Array.isArray(dataLocal)) {
-            throw new Error("Error: The value of the attribute you are looking for does not correspond to an array variable.");
+            throw new Error(`Error: The value of the attribute "${localCollection}" you are looking for does not correspond to an array variable.`);
         }
 
         //console.log(dataLocal);
         console.log("Eval check passed.");
 
         const content = element.innerHTML;
-        element.innerHTML = "";
 
+        element.innerHTML = "";
+        console.log("da qui");
+
+
+        //console.log("ora provo a richiamare l'elemento");
+        //console.log(window[itemToInterpolate]);
         // Iterate over the dataLocal array and replace the itemToInterpolate in the content
         dataLocal.forEach((item, i) => {
+            console.log(itemToInterpolate);
+            console.log("ora provo a richiamare l'elemento nel sotto ciclo");
+            //createVariable(itemToInterpolate, eval(`dataLocal[${i}]`))
+            //console.log(window[itemToInterpolate]);
             const myAttributes = content
                 .match(regex)
                 .filter(value => {
@@ -215,6 +101,7 @@ function printP_for(element, iterator, array) {
                 })
                 .map(value => {
                     const processedValue = value.slice(2, -2).trim().replace(itemToInterpolate, "");
+                    console.log(processedValue);
                     if (processedValue != "") {
                         const subProcessedValue = processedValue.substring(1);
                         if (processedValue.startsWith(".") && isValidVariableName(subProcessedValue)) {
@@ -227,7 +114,13 @@ function printP_for(element, iterator, array) {
 
             console.log(myAttributes);
             console.log("eval test");
-
+            console.log("");
+            //[itemToInterpolate] = eval(`dataLocal[${i}]}`) != undefined ? typeof eval(`dataLocal[${i}]}`) === "object" ? eval(`dataLocal[${i}]}`) : eval(`dataLocal[${i}]}`) : error
+            //console.log("da qui");
+            //console.log("nome da creare: " + itemToInterpolate);
+            //createVariable(itemToInterpolate, "aaaaaahcazzo")
+            //console.log("ora provo a richiamare l'elemento");
+            console.log(window[itemToInterpolate]);
             const updatedContent = content.replace(new RegExp(`{{\\s*${itemToInterpolate}(.*?)\\s*}}`, "g"), (match) => {
                 console.log(match);
                 if (myAttributes.length > 0) {
@@ -235,7 +128,6 @@ function printP_for(element, iterator, array) {
                     console.log(myAttr);
                     if (myAttr != "") {
                         try {
-
                             console.log(eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof (eval(`dataLocal[${i}]${myAttr}`)) === "object" ? "not undefined and object" : "not undefined but not object" : "undefined and error");
                             return eval(`dataLocal[${i}]${myAttr}`) != undefined ? typeof eval(`dataLocal[${i}]${myAttr}`) === "object" ? JSON.stringify(eval(`dataLocal[${i}]${myAttr}`)) : eval(`dataLocal[${i}]${myAttr}`) : error
                         } catch (error) {
@@ -262,3 +154,4 @@ function printP_for(element, iterator, array) {
     }
 
 }
+
